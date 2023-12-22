@@ -127,3 +127,58 @@ docker container run --publish 8080:80 --detach --name webserver httpd
 ```shell
 docker container run --publish 80:80 --detach --name proxyserver nginx
 ```
+
+#### Inspecting config data of a container
+
+```shell
+docker container inspect container_name
+```
+
+- returns config info as json array
+
+#### See container stat
+
+```shell
+docker container stats container_name
+```
+
+#### Getting a shell inside containers
+
+```shell
+docker container run -p 80:80 --name proxyserver -it nginx bash
+```
+
+- -it : allow to interact with container system
+- bash : it always goes after the image name and it's indicate the prompt
+
+The `exit` command is used to get out from container prompt. After exiting from the container, the container will be stopped because we are modifed the command promt. In order to get back into the container prompt and start the container, the following command is used.
+
+```shell
+docker container start -ai container_name
+```
+
+- -ai : this flag will take back to containers command prompt
+
+Creating a mariadb container
+
+```shell
+docker run -d -p 3306:3306 --name db -e MARIADB_ROOT_PASSWORD=pass mariadb
+```
+
+Inoder to access into a running container we can use the follwing command
+
+```shell
+docker container exec -it db bash
+```
+
+```shell
+ps aux
+```
+
+- returns all the running process in the container
+
+```shell
+mariadb -u root -p
+```
+
+- to enter into mariadb command prompt
