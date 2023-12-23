@@ -88,3 +88,33 @@ docker container exec -it new_nginx ping web_host
 
 - we are pinging `web_host` from `new_nginx`
 - eventhough `web_host` container does not exposed any port, it still can communicate with `new_nginx` container because they are in the same network `my_app_net`.
+
+### DNS round robin test
+
+```shell
+docker network create dns_round_robin
+```
+
+```shell
+docker container run -d --name elaticsearch_1 --network dns_round_robin --network-alias bisso.com elasticsearch:2
+```
+
+- `-d --name elaticsearch_1` : running container `elasticsearch_1` in detach mode
+- `--network dns_round_robin` : connecting to dns_round_robin virtual network.
+- `--network-alias bisso.com` : assing ntework alias for this container as `bisso.com`
+
+```shell
+docker container run -d --name elaticsearch_2 --network dns_round_robin --network-alias bisso.com elasticsearch:2
+```
+
+- another elasticsearch:2 container with different name but same network alias.
+
+```shell
+docker container run --rm --network dns_round_robin alpine nslookup bisso.com
+```
+
+- `--rm` : remove the container as soon as it is done with given command.
+- `--network dns_round_robin` : connecting to `dns_round_robin` network
+- `alpine` : alpine image
+- `nslookup bisso.com` : looks for ip address for `bisso.com` network alias.
+  <img src="resources/imgs/alpine_nslookup_search.png" alt="alpine_nslookup_search">
