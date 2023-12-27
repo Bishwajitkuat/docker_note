@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  drupal:
+    build:
+      context: .
+      dockerfile: drupal.Dockerfile
+    image: drupal-custom
+    ports:
+      - "80:80"
+    volumes:
+      - ./drupal/web:/var/www/html
+      - ./drupal:/opt/drupal
+      - ./drupal/composer.json:/opt/drupal/composer.json
+      - ./drupal/composer.lock:/opt/drupal/composer.lock
+    depends_on:
+      - drupaldb
+    restart: always
+
+  drupaldb:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+      MARIADB_USER: bisso
+      MARIADB_PASSWORD: pass
+      MARIADB_DATABASE: drupalDB
+    volumes:
+      - ./drupaldb:/var/lib/mysql
+    restart: always
