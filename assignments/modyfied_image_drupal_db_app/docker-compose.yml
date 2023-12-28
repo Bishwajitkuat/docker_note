@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  drupal:
+    build:
+      context: .
+      dockerfile: drupal.Dockerfile
+    image: drupal-custom
+    ports:
+      - "80:80"
+    volumes:
+      - drupal-modules:/var/www/html/modules
+      - drupal-profiles:/var/www/html/profiles
+      - drupal-sites:/var/www/html/sites
+      - drupal-themes:/var/www/html/themes
+    depends_on:
+      - drupaldb
+    restart: always
+
+  drupaldb:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+      MARIADB_USER: bisso
+      MARIADB_PASSWORD: pass
+      MARIADB_DATABASE: drupalDB
+    volumes:
+      - ./drupaldb:/var/lib/mysql
+    restart: always
+
+volumes:
+  drupal-modules:
+  drupal-profiles:
+  drupal-sites:
+  drupal-themes:
