@@ -1,0 +1,39 @@
+# if no version is specified then v1 is assumed, recommends minimum v2
+version: "3.1"
+
+# Each container benongs to services
+services:
+  wordpress:
+    #we can assign name of the container
+    container_name: "wordpress"
+    # the base image for the container
+    image: wordpress:latest
+    # we can added command to replace the default by image
+    # command:
+    # exposing ports
+    ports:
+      - "8080:80"
+    # we can pass all the envireonment as an array under environment key
+    environment:
+      WORDPRESS_DB_HOST: wordpressdb
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: pass
+      WORDPRESS_DB_NAME: wordpressDB
+      # we can bind mount with volumes ky
+    volumes:
+      - ./db:/var/lib/mysql
+    # if some other contianer needs to be ready before this one, we cans pass then in depends_on key
+    depends_on:
+      - wordpressdb
+  wordpressdb:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: pass
+      MARIADB_DATABASE: wordpressDB
+    volumes:
+      - ./wordpressdb:/var/lib/mysql
+# if we want to create custom network, we can create with with networks key
+# networks:
+#   - my_app_network
