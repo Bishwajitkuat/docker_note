@@ -75,7 +75,7 @@ docker service create --name nginx_server -p 8080:80 -d --replicas 3 nginx
 
 ![service create replicas](resources/imgs/service_create_replicas.png)
 
-now in this following address we will be `http://167.71.74.208:8080/` nginx home page
+- now `http://167.71.74.208:8080/` will serve nginx home page
 
 ### `--driver overlay `
 
@@ -129,7 +129,7 @@ docker service ps drupal
 - it's running in node2
   ![service ps drupal](resources/imgs/service_ps_drupal.png)
 
-- now drupal app is served if try to access by ip address of any nodes.
+- now drupal app is served in id address of any nodes in the swarm.
 
 ## Routing Mesh
 
