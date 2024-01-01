@@ -76,3 +76,63 @@ docker service create --name nginx_server -p 8080:80 -d --replicas 3 nginx
 ![service create replicas](resources/imgs/service_create_replicas.png)
 
 now in this following address we will be `http://167.71.74.208:8080/` nginx home page
+
+### `--driver overlay `
+
+```shell
+docker network create --driver overlay drupal_app_network
+```
+
+- Creates a swarm wide bridge network where different container in different host can connenct in a swarm.
+- IPSec (AES) encryption can be enabled
+
+## Creating drupal app
+
+- creating a overlay networ through which cross host container/service can communicate.
+
+```shell
+docker network create --driver overlay drupal_app_network
+```
+
+### `creating mariadb service`
+
+```shell
+docker service create --name drupaldb --network drupal_app_network \
+-e MARIADB_ROOT_PASSWORD=pass \
+-e MARIADB_USER=bisso \
+-e MARIADB_PASSWORD=pass \
+-e MARIADB_DATABASE=drupalDB \
+mariadb:latest
+```
+
+- checking service status
+
+```shell
+docker service ps drupaldb
+```
+
+- its running in node1
+  ![service ps drupaldb](resources/imgs/service_ps_drupaldb.png)
+
+### `Creating drupal service`
+
+```shell
+docker service create --name drupal --network drupal_app_network -p 80:80 drupal
+```
+
+- checking service status
+
+```shell
+docker service ps drupal
+```
+
+- it's running in node2
+  ![service ps drupal](resources/imgs/service_ps_drupal.png)
+
+- now drupal app is served if try to access by ip address of any nodes.
+
+## Routing Mesh
+
+Routes ingress (incoming) packets for a Service to proper task.
+Takes care of load balanching.
+This is stateless load blancing.
