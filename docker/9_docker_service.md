@@ -65,3 +65,33 @@ docker service rm kind_bhabha
 ```
 
 - removes kind_bhabha service and all container in it
+
+### increase/decrease service replica with `scale`
+
+```shell
+docker service create --name nginx_service -p 80:80 nginx
+```
+
+```shell
+docker service scale nginx_service=5
+```
+
+### rolling update of `--image`
+
+```shell
+docker service update --image nginx:1.13.6 nginx_service
+```
+
+### add/remove publish ports with `--publish-rm` & `--publish-add` flags
+
+```shell
+docker service update --publish-rm 80 --publish-add 8080:80 nginx_service
+```
+
+### spreading service to least used node in swarm with `--force`
+
+```shell
+docker service update --force nginx_service
+```
+
+- the updated nginx_service with be placed into the least used node in the swarm.
